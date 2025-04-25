@@ -1,34 +1,48 @@
 import os
 
-def modify_and_copy_file():
-    filename = input("Enter the name of the file to read from (e.g., sample.txt): ")
-    current_dir = os.getcwd()
-    full_path = os.path.join(current_dir, filename)
-
+# 1. Function to read from a file
+def read_file(filename):
     try:
-        # Try to open the file for reading using full path
-        with open(full_path, "r") as infile:
-            lines = infile.readlines()
-
-        # Modify the content: reverse each line
-        modified_lines = [line[::-1] for line in lines]
-
-        # Write to a new file in the same directory
-        new_filename = "modified_" + filename
-        output_path = os.path.join(current_dir, new_filename)
-
-        with open(output_path, "w") as outfile:
-            outfile.writelines(modified_lines)
-
-        print(f"✅ Success: Modified file saved as '{output_path}'")
-
+        with open(filename, "r") as infile:
+            content = infile.read()
+        return content
     except FileNotFoundError:
-        print(full_path)
-        print(f"❌ Error: File '{filename}' not found in directory: {current_dir}")
+        print(f"❌ Error: File '{filename}' not found.")
+        return None
     except IOError:
-        print(f"❌ Error: Could not read from '{full_path}'.")
-    except Exception as e:
-        print(f"❌ An unexpected error occurred: {e}")
+        print(f"❌ Error: Could not read from '{filename}'.")
+        return None
 
-# Run the function
-modify_and_copy_file()
+# 2. Function to modify the content
+def modify_content(content):
+    # Example modification: convert to uppercase and add a footer line
+    modified = content.upper()
+    modified += "\n\n--- File processed successfully. ---"
+    return modified
+
+# 3. Function to write to a new file
+def write_file(new_filename, content):
+    try:
+        with open(new_filename, "w") as outfile:
+            outfile.write(content)
+    except IOError:
+        print(f"❌ Error: Could not write to '{new_filename}'.")
+
+# 4. Call functions in sequence
+def process_file():
+    filename = input("Enter the name of the file to read (e.g., sample.txt): ")
+    cwd = os.getcwd()
+    full_path = os.path.join(cwd, filename)
+
+    original_content = read_file(full_path)
+
+    if original_content:
+        modified_content = modify_content(original_content)
+        new_filename = os.path.join(cwd, "modified_" + filename)
+        write_file(new_filename, modified_content)
+
+        # 5. Print success message
+        print(f"✅ Success: Modified content written to '{new_filename}'")
+
+# Run the process
+process_file()
