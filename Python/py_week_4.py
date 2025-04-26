@@ -1,10 +1,13 @@
 import os
 
-# 1. Function to read from a file
+script_dir = os.path.dirname(__file__)
+
 def read_file(filename):
+    file_path = os.path.join(script_dir, filename)
     try:
-        with open(filename, "r") as infile:
-            content = infile.read()
+        with open(file_path, "r") as file:
+            content = file.read()
+            print(f"✅ Success: Read content from '{filename}'\n")
         return content
     except FileNotFoundError:
         print(f"❌ Error: File '{filename}' not found.")
@@ -13,36 +16,26 @@ def read_file(filename):
         print(f"❌ Error: Could not read from '{filename}'.")
         return None
 
-# 2. Function to modify the content
-def modify_content(content):
-    # Example modification: convert to uppercase and add a footer line
-    modified = content.upper()
-    modified += "\n\n--- File processed successfully. ---"
-    return modified
-
-# 3. Function to write to a new file
 def write_file(new_filename, content):
+    new_file_path = os.path.join(script_dir, new_filename)
     try:
-        with open(new_filename, "w") as outfile:
+        with open(new_file_path, "w") as outfile:
             outfile.write(content)
     except IOError:
         print(f"❌ Error: Could not write to '{new_filename}'.")
-
-# 4. Call functions in sequence
-def process_file():
-    filename = input("Enter the name of the file to read (e.g., sample.txt): ")
-    cwd = os.getcwd()
-    full_path = os.path.join(cwd, filename)
-
-    original_content = read_file(full_path)
-
+        
+def copy_content():
+    filename = input("Enter the name of the file to copy (e.g., sample.txt): ")
+    original_content = read_file(filename)
+    
     if original_content:
-        modified_content = modify_content(original_content)
-        new_filename = os.path.join(cwd, "modified_" + filename)
+        modified_content = read_file(filename)
+        new_filename = "copy_" + filename
         write_file(new_filename, modified_content)
 
-        # 5. Print success message
-        print(f"✅ Success: Modified content written to '{new_filename}'")
+        print(f"✅ Success: {filename} content copied to '{new_filename}'")
 
-# Run the process
-process_file()
+def process_file():
+    filename = input("Enter the name of the file to read (e.g., sample.txt): ")
+    original_content = read_file(filename)
+    print(original_content, end="\n\n*****END OF FILE*****")
