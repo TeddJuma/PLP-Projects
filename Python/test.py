@@ -1,13 +1,13 @@
-import os
-print("🔍 Looking in:", os.getcwd(), "\n")
+import pandas as pd
+
+file = "C:\Programming\PLP Content\Python\Python\data set\Iris.csv" # replace with the path to your CSV file
+df = pd.read_csv(file)
+# print(df.describe())
 
 
-import os
+row = df.loc[df['Id'] == 3]
+print(row)
 
-script_dir = os.path.dirname(__file__)
-file_path = os.path.join(script_dir, "text.txt")
-with open(file_path, "r") as infile:
-    lines = infile.readlines()
-    for line in lines:
-        print(line)
-        
+# row_index = df.loc[df['Id'] == 2].index[0]
+# row_values = df.iloc[row_index]
+# print(row_values)
